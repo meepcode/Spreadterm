@@ -1,0 +1,29 @@
+expression = logical_or
+
+logical_or = logical_and (DOUBLE_BAR logical_and)*
+logical_and = bitwise_or (DOUBLE_AMPERSAND bitwise_or)*
+bitwise_or = bitwise_xor (BAR bitwise_xor)*
+bitwise_xor = bitwise_and (CARET bitwise_and)*
+bitwise_and = equality (AMPERSAND equality)*
+equality = comparison (DOUBLE_EQUALS comparison)*
+comparison = shift ((GREATER_THAN | GREATER_THAN EQUALS | LESS_THAN | LESS_THAN EQUALS) shift)+
+shift = additive ((GREATER_THAN GREATER_THAN | LESS_THAN LESS_THAN) additive)*
+additive = multiplicative ((PLUS | HYPHEN) multiplicative)*
+multiplicative = power ((ASTERISK | SLASH | PERCENT_SIGN) power)*
+power = unary (DOUBLE_ASTERISK unary)*
+unary = EXCLAMATION_MARK unary
+      | TILDE unary
+      | "int" unary
+      | "float" unary
+      | statistics
+statistics = (MAX | MEAN | MIN | SUM) OPEN_PARENTHESIS cell_value COMMA cell_value CLOSE_PARENTHESIS
+           | atom
+atom = OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
+     | (MINUS)? DIGIT (DIGIT)* PERIOD (DIGIT)*
+     | integer_value
+     | DOUBLE_QUOTE (UNICODE_CHARACTER | BACKSLASH DOUBLE_QUOTE | BACKSLASH BACKSLASH)* DOUBLE
+     | "false"
+     | "true"
+     | cell_value
+cell_value = OPEN_BRACKET integer_value COMMA integer_value CLOSE_BRACKET
+integer_value = (MINUS)? DIGIT (DIGIT)*
